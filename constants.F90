@@ -5,5 +5,6 @@ module constants
     integer, parameter :: dp = selected_real_kind(14)
 
     real(dp), parameter :: n_air = 1
+    real(dp), parameter :: n_glass = 1.33
 
 end module
