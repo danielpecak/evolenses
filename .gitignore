@@ -1,2 +1,6 @@
 bin/*
 test*
+/rpmbuild
+/dist
+*.o
+*.mod

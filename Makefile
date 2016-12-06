@@ -1,39 +1,33 @@
-VERSION=0.1
+VERSION = 161205
 
-prefix=/opt/evolenses
-exec_prefix=$(prefix)
-bindir=$(exec_prefix)/bin
-datadir=$(prefix)/share
-includedir=$(prefix)/include
-libdir=$(exec_prefix)/lib
-docdir=$(datadir)/doc/evolenses
+prefix = /usr/local
+exec_prefix = $(prefix)
+bindir = $(exec_prefix)/bin
+datadir = $(prefix)/share
+includedir = $(prefix)/include
+libdir = $(exec_prefix)/lib
+docdir = $(datadir)/doc
 
-CC := gcc
 FC := gfortran
 
-override ALL_CFLAGS = -I.
-override ALL_FCFLAGS = -I.
+FCFLAGS   = -g -O3
+CPPFLAGS  =
+INCLUDE   = -I.
 
-# C compilers
-ifeq ($(CC),gcc)
-CFLAGS = -O3 -march=native -ffast-math
-endif
-ifeq ($(CC),icc)
-CFLAGS = -O2 -xHost -unroll -ipo
-endif
+override ALL_FCFLAGS   =
+override ALL_CPPFLAGS  = -DVERSION="$(VERSION)" -Ddp="selected_real_kind(14)"
 
-# Fortran compilers
 ifeq ($(FC),gfortran)
-override ALL_FCFLAGS += -std=f2008 -fimplicit-none -cpp
-FCFLAGS = -O3 -march=native -ffast-math -fstack-arrays
+override ALL_FCFLAGS += -std=f2008 -fimplicit-none
+FCFLAGS = -march=native -ffast-math -fstack-arrays
 endif
 ifeq ($(FC),ifort)
-override ALL_FCFLAGS += -implicitnone -cpp
-FCFLAGS = -O2 -xHost -unroll -ipo
+override ALL_FCFLAGS += -std08 -implicitnone
+FCFLAGS = -xHost -ipo
 endif
 
-override ALL_CFLAGS += $(CFLAGS)
-override ALL_FCFLAGS += $(FCFLAGS)
+override ALL_CPPFLAGS 	+= $(INCLUDE) $(CPPFLAGS)
+override ALL_FCFLAGS 	+= $(ALL_CPPFLAGS) $(FCFLAGS)
 
 all:  bin/evolenses
 
@@ -43,27 +37,23 @@ installdirs:
 install: installdirs all
 	install -p bin/* $(DESTDIR)$(bindir)
 
-bin/evolenses: evolenses.F90
+bin/%: %.F90 constants.o functions.o optsolv.o
 	mkdir -p bin
-	$(FC) $(ALL_FCFLAGS) -o $@  $^
+	$(FC) $(ALL_FCFLAGS) -o $@ $^
+
+%.o: %.F90
+	$(FC) $(ALL_FCFLAGS) -c -o $@ $<
 
 dist: distclean
 	mkdir -p dist
-	tar cf dist/evolenses-$(VERSION).tar ../evolenses \
-			--exclude='.git' --exclude='.gitmodules' \
+	tar cvf dist/evolenses-$(VERSION).tar -C .. \
+			--exclude='evolenses/.git' \
+			--exclude='evolenses/.gitmodules' \
 			--exclude='evolenses/dist' \
-			--exclude='evolenses/rpmbuild'
+			--exclude='evolenses/rpmbuild' \
+			--transform="s/^evolenses/evolenses-$(VERSION)/" \
+			evolenses
 	xz -f dist/evolenses-$(VERSION).tar
-
-rpm: dist
-	mkdir -p rpmbuild/SOURCES rpmbuild/SPECS rpmbuild/RPMS \
-				rpmbuild/SRPMS rpmbuild/BUILD
-	cp dist/evolenses-$(VERSION).tar.xz rpmbuild/SOURCES/
-	cp evolenses.spec rpmbuild/SPECS
-	cd rpmbuild/SPECS && rpmbuild \
-			--define "_topdir $(CURDIR)/rpmbuild" \
-			--define "_version $(VERSION)" \
-			-ba evolenses.spec
 
 clean:
 	rm -f *.mod *.o

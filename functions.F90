@@ -1,7 +1,9 @@
 module functions
-use constants
+
+    use iso_fortran_env
 
 contains
+    
   subroutine secondMoment(vecX,result)
     real(dp), intent(in) :: vecX(:)
     real(dp), intent(out):: result
