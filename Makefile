@@ -37,7 +37,9 @@ installdirs:
 install: installdirs all
 	install -p bin/* $(DESTDIR)$(bindir)
 
-bin/%: %.F90 constants.o functions.o optsolv.o
+random.o: interpol.o
+
+bin/%: %.F90 constants.o functions.o optsolv.o random.o interpol.o
 	mkdir -p bin
 	$(FC) $(ALL_FCFLAGS) -o $@ $^
 
