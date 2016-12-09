@@ -27,9 +27,12 @@ all:  bin/evolenses
 
 installdirs:
 	install -d $(DESTDIR)$(bindir)
+	install -d $(DESTDIR)$(docdir)/evolenses
 
 install: installdirs all
 	install -p bin/* $(DESTDIR)$(bindir)
+	#install -m644 -p LICENSE $(DESTDIR)$(docdir)/evolenses
+	#install -m644 -p README $(DESTDIR)$(docdir)/evolenses
 
 random.o: interpol.o
 
