@@ -36,15 +36,9 @@ contains
 
         call random_seed(size=n)
         allocate(seed(n))
-        if (.not. allocated(seed)) then
-            write (0,*) 'init_random: allocation failed'
-            return
-        end if
         open(unit=33,file='/dev/urandom',action='read',form='unformatted',iostat=err)
         if ( err .ne. 0 ) then
-            write(0,*) 'init_random: /dev/urandom not found'
-            deallocate(seed)
-            return
+            error stop 'init_random: /dev/urandom not found'
         end if
         read (33) seed
         close(33)
