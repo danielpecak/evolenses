@@ -1,33 +1,27 @@
-VERSION = 161205
+VERSION  	 = 161209
 
-prefix = /usr/local
-exec_prefix = $(prefix)
-bindir = $(exec_prefix)/bin
-datadir = $(prefix)/share
-includedir = $(prefix)/include
-libdir = $(exec_prefix)/lib
-docdir = $(datadir)/doc
+prefix 	 	 = /usr/local
+exec_prefix	 = $(prefix)
+bindir		 = $(exec_prefix)/bin
+datadir	 	 = $(prefix)/share
+includedir 	 = $(prefix)/include
+libdir 	 	 = $(exec_prefix)/lib
+docdir 	 	 = $(datadir)/doc
 
-FC := gfortran
+INCLUDE	 	 = -I.
 
-FCFLAGS   = -g -O3
-CPPFLAGS  =
-INCLUDE   = -I.
+CC  	 	 ?= cc
+FC 		 	 := $(if $(filter $(FC),f77),f95,$(FC))
 
-override ALL_FCFLAGS   =
-override ALL_CPPFLAGS  = -DVERSION="$(VERSION)" -Ddp="selected_real_kind(14)"
+CFLAGS 	 	 ?= -O3 -march=native -ffast-math -Wall
+FFLAGS	 	 ?= -O3 -march=native -ffast-math -fstack-arrays -std=f2008 -Wall
 
-ifeq ($(FC),gfortran)
-override ALL_FCFLAGS += -std=f2008 -fimplicit-none
-FCFLAGS = -march=native -ffast-math -fstack-arrays
-endif
-ifeq ($(FC),ifort)
-override ALL_FCFLAGS += -std08 -implicitnone
-FCFLAGS = -xHost -ipo
-endif
-
-override ALL_CPPFLAGS 	+= $(INCLUDE) $(CPPFLAGS)
-override ALL_FCFLAGS 	+= $(ALL_CPPFLAGS) $(FCFLAGS)
+ALL_CPPFLAGS = "-DVERSION=\"$(VERSION)\"" -DREALPRECISION=14 $(CPPFLAGS)
+COMPILE.c 	 = $(CC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(CFLAGS) -c
+COMPILE.F    = $(FC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(FFLAGS) -c
+LINK.c 	 	 = $(CC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
+LINK.F    	 = $(FC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
+LINK.o       = $(LD) --build-id $(LDFLAGS)
 
 all:  bin/evolenses
 
@@ -41,24 +35,23 @@ random.o: interpol.o
 
 bin/%: %.F90 constants.o functions.o optsolv.o random.o interpol.o
 	mkdir -p bin
-	$(FC) $(ALL_FCFLAGS) -o $@ $^
+	$(LINK.F) $^ -o $@
 
 %.o: %.F90
-	$(FC) $(ALL_FCFLAGS) -c -o $@ $<
-
-dist: distclean
-	mkdir -p dist
-	tar cvf dist/evolenses-$(VERSION).tar -C .. \
-			--exclude='evolenses/.git' \
-			--exclude='evolenses/.gitmodules' \
-			--exclude='evolenses/dist' \
-			--exclude='evolenses/rpmbuild' \
-			--transform="s/^evolenses/evolenses-$(VERSION)/" \
-			evolenses
-	xz -f dist/evolenses-$(VERSION).tar
+	$(COMPILE.F) -c $< -o $@
 
 clean:
-	rm -f *.mod *.o
+	rm -rfv *.o *.mod *.a *.so *.so *.pc
 
 distclean: clean
-	rm -rf bin
+	rm -rfv evolenses-*
+	rm -rfv x86_64 i686 .build*
+
+dist: distclean
+	tar cvf evolenses-$(VERSION).tar -C .. \
+			--exclude='evolenses/.git' \
+			--exclude='evolenses/*.tar' \
+			--exclude='evolenses/bin' \
+			--transform="s/^evolenses/evolenses-$(VERSION)/" \
+			evolenses
+	xz -f evolenses-$(VERSION).tar

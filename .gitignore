@@ -1,6 +1,8 @@
 bin/*
 test*
-/rpmbuild
-/dist
 *.o
 *.mod
+/evolenses-*
+/x86_64
+/i686
+/.build*

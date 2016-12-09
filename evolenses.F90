@@ -3,6 +3,8 @@ program evolenses
   use functions
   use constants
 
+  integer, parameter :: dp = selected_real_kind(REALPRECISION)
+
   real(dp) :: vecX(1:10)
   real(dp) :: result
 
