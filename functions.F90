@@ -13,8 +13,8 @@ module functions
     end type
 
     type ray
-        real(dp) :: x       ! wspolrzedna wzdluz osi
-        real(dp) :: z       ! odleglosc od osi
+        real(dp) :: z       ! wspolrzedna wzdluz osi
+        real(dp) :: x       ! odleglosc od osi
         real(dp) :: phi     ! kat
     end type
 
@@ -37,7 +37,7 @@ contains
   subroutine propagate(r,dist)
     type(ray), intent(inout) :: r
     real(dp), intent(in)    :: dist     !odległość na jaką propaguje się promień
-    r%z = r%z + r%phi*dist     !zmiana ogległości od osi optycznej, reszta bez zmian
+    r%x = r%x + r%phi*dist     !zmiana ogległości od osi optycznej, reszta bez zmian
   end subroutine
 
   subroutine refraction_kurwa(r,s0,s)
@@ -45,7 +45,7 @@ contains
     type(optsurface), intent(in) :: s0
     type(optsurface), intent(in) :: s
     !załamanie w punkcie styku, czyli odległośc od osi optycznej bez zmian
-    r%phi = r%z * (s0%ncoeff - s%ncoeff) / (s%rad*s%ncoeff) &
+    r%phi = r%x * (s0%ncoeff - s%ncoeff) / (s%rad*s%ncoeff) &
         & + r%phi*s0%ncoeff / s%ncoeff
   end subroutine
 
