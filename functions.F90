@@ -30,8 +30,8 @@ contains
     real(dp), intent(in) :: vecX(:)
     real(dp), intent(out):: result
     real(dp) :: mu
-    mu = sum(vecX)
-    result = sum(vecX(:)**2)-mu**2
+    mu = sum(vecX)/size(vecX,1)
+    result = sum((vecX(:)-mu)**2)
   end subroutine secondMoment
 
   subroutine propagate(r,dist)

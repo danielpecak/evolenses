@@ -40,13 +40,11 @@ bin/%: %.F90 functions.o random.o interpol.o
 	mkdir -p bin
 	$(LINK.F) $^ -o $@
 
-tests: testRay testSecondMoment
+testbin/%: tests/%.F90 functions.o
+	mkdir -p testbin
+	$(LINK.F) $^ -o $@
 
-testRay: tests/test_ray.F90 functions.o
-	gfortran $(ALL_CPPFLAGS) -o bin/test_ray tests/test_ray.F90 functions.o
-
-testSecondMoment: tests/test_secondMoment.F90 functions.o
-	gfortran $(ALL_CPPFLAGS) -o bin/test_secondMoment tests/test_secondMoment.F90 functions.o
+tests: testbin/test_ray testbin/test_secondMoment
 
 %.o: %.F90
 	$(COMPILE.F) $< -o $@

@@ -7,7 +7,8 @@ program test_secondMoment
   real(dp) :: vecX(1:10)
   real(dp) :: result
 
-  vecX=0
+  print *, "Rozkład płaski, wynik: 0"
+  vecX=1.d0
   call secondMoment(vecX,result)
   print *, result
 
