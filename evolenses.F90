@@ -36,9 +36,18 @@ contains
     end subroutine
 
     subroutine propagate(vec,dist)
-      real(dp), intent(in)    :: dist
-      real(dp), intent(inout) :: vec(1:2)
-      vec(1) = vec(1) + vec(2)*dist
+      real(dp), intent(in)    :: dist     !odległość na jaką propaguje się promień
+      real(dp), intent(inout) :: vec(1:2) !vec(1) - odległość od osi optycznej, vec(2) kąt z osią optyczną
+      vec(1) = vec(1) + vec(2)*dist !zmiana ogległości od osi optycznej
+      ! kąt się nie zmienia podczas propagacji
+    end subroutine
+
+    subroutine refraction_kurwa(vec,s)
+      real(dp), intent(inout) :: vec(1:2) !vec(1) - odległość od osi optycznej, vec(2) kąt z osią optyczną
+      type(optsurface), intent(in) :: s
+      real(dp) :: n1,n2
+      !załamanie w punkcie styku, czyli odległośc od osi optycznej bez zmian
+      vec(2) = vec(1)*(n1n-n2)/(optsurface%rad*n2) + vec(2)*n1/n2
     end subroutine
 
 end program
