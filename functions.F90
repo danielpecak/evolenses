@@ -4,13 +4,10 @@ module functions
     integer, parameter, private :: dp = selected_real_kind(REALPRECISION)
 
     type optsurface
-        !!!                   PARAMETRY ZADANE
         real(dp) :: xmid      ! polozenie punktu przeciecia powierzchni z osia optyczna
         real(dp) :: rad       ! promien krzywizny (R>0 -> ksztalt C, R<0 -> ksztalt D)
         real(dp) :: diam      ! srednica tuby
-        real(dp) :: n1        ! wspolczynnik zalamania przed powierzchnia
-        real(dp) :: n2        ! wspolczynnik zalamania za powierzchnia
-        !!!                   PARAMETRY WYZNACZANE
+        real(dp) :: ncoeff    ! wspolczynnik zalamania przed powierzchnia
         real(dp) :: xcurv     ! polozenie srodka sfery definiujacej krzywizne
         real(dp) :: xrim      ! polozenie
     end type
@@ -32,11 +29,28 @@ contains
     ! kąt się nie zmienia podczas propagacji
   end subroutine
 
-  subroutine refraction_kurwa(vec,s)
+  subroutine refraction_kurwa(vec,s0,s)
     real(dp), intent(inout) :: vec(1:2) !vec(1) - odległość od osi optycznej, vec(2) kąt z osią optyczną
+    type(optsurface), intent(in) :: s0
     type(optsurface), intent(in) :: s
     !załamanie w punkcie styku, czyli odległośc od osi optycznej bez zmian
-    vec(2) = vec(1)*(optsurface%n1-optsurface%n2)/(optsurface%rad*optsurface%n2) + vec(2)*optsurface%n1/optsurface%n2
+    vec(2) = vec(1) * (s0%ncoeff - s%ncoeff) / (s%rad*s%ncoeff) &
+        & + vec(2)*s0%ncoeff / s%ncoeff
   end subroutine
+
+    subroutine optsurf_geom(s)
+        type(optsurface), intent(inout) :: S
+        real(dp) :: c
+        if ( abs(S%rad) < (S%diam / 2) )  error stop "Lens is no good."
+            S%xcurv = ( S%xmid + S%rad )
+            c = sqrt( S%rad**2 - S%diam**2 / 4 )
+        if ( S%rad > 0 ) then
+            S%xrim = S%xcurv - c
+        else
+            S%xrim = S%xcurv + c
+        endif
+    end subroutine
+
+
 
 end module functions

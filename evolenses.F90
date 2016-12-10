@@ -15,21 +15,5 @@ program evolenses
     call secondMoment(vecX,result)
     print *, result
 
-contains
-
-    subroutine optsurf_geom(s)
-        type(optsurface), intent(inout) :: S
-        real(dp) :: c
-        if ( abs(S%rad) < (S%diam / 2) )  error stop "Lens is no good."
-        S%xcurv = ( S%xmid + S%rad )
-        c = sqrt( S%rad**2 - S%diam**2 / 4 )
-        if ( S%rad > 0 ) then
-            S%xrim = S%xcurv - c
-        else
-            S%xrim = S%xcurv + c
-        endif
-    end subroutine
-
-
 
 end program
