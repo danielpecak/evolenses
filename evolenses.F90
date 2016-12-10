@@ -11,7 +11,7 @@ program evolenses
         real(dp) :: diam      ! srednica tuby
         !!!                   PARAMETRY WYZNACZANE
         real(dp) :: xcurv     ! polozenie srodka sfery definiujacej krzywizne
-        real(dp) :: xrim      ! polozenie
+        real(dp) :: xrim      ! polozenie przeciecia obwodu powierchni z obudowa
     end type
 
 
