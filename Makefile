@@ -49,7 +49,10 @@ testSecondMoment: tests/test_secondMoment.F90 functions.o
 	gfortran $(ALL_CPPFLAGS) -o bin/test_secondMoment tests/test_secondMoment.F90 functions.o
 
 %.o: %.F90
-	$(COMPILE.F) -c $< -o $@
+	$(COMPILE.F) $< -o $@
+
+tex: $(wildcard tex/*.tex)
+	$(MAKE) -C tex
 
 clean:
 	rm -rfv *.o *.mod *.a *.so *.so *.pc
