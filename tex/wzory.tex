@@ -10,8 +10,22 @@
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \author{Gronkiewicz, D., Pęcak, D.}
 \title{Wzory do liczenia soczewek}
-\begin{document}
 
+\renewcommand{\vector}[2]{\left(
+\begin{array}{c}
+ #1  \\
+ #2  \\
+\end{array}
+\right)}
+
+\newcommand{\ABCDmat}[4]{\left(
+\begin{array}{cc}
+ #1 & #2  \\
+ #3 & #4  \\
+\end{array}
+\right)}
+
+\begin{document}
 \section{Notacja i konwencje}
 Oś optyczna (oznaczona literą $z$) pozioma, propagacja z lewej do prawej.
 \begin{itemize}
@@ -28,5 +42,33 @@ Przecięcie powierzchni prostopadłej do $\hat z$ w punkcie $z$ ze sferyczną po
 \begin{equation}
 \left[ 2R - ( z - z_{\rm mid} ) \right] \left( z - z_{\rm mid} \right) = x^2
 \end{equation}
+
+\section{Macierze ABCD}
+W każdym położeniu $z$ wzdłuż osi optycznej można opisać promień światła za pomocą jego odległości $x$ od osi optycznej oraz kąta $\theta$, pod którym się  propaguje
+\[
+\vector{x}{\theta}.
+\]
+$x > 0$ oznacza, że promień znajduje się nad osią optyczną. $\theta>0$ oznacza, że promień podczas propagacji oddala się w górę od osi optycznej. 
+Operacje na promieniu:
+\begin{itemize}
+ \item Propagacja o $d$ wzdłuż osi $z$ jest opisywana przez Macierze
+ \[
+  \ABCDmat{1}{d}{0}{1},
+ \]
+ tzn. 
+ \[
+  \ABCDmat{1}{d}{0}{1} \vector{x}{\theta} = \vector{x + \theta d}{\theta},
+ \]
+ gdzie kąt propagacji się nie zmienia, a odległość promienia od osi optycznej w ogólności się zmienia.
+ 
+ \item Załamanie na sferze o promieniu $R$ jest opisane przez macierz
+ \[
+  \ABCDmat{1}{0}{\frac{n_1-n_2}{Rn_2}}{\frac{n_1}{n_2}},
+ \]
+ gdzie $n_1$ jest ośrodkiem, z którego wychodzi promień, a $n_2$ ośrodkiem, do którego się załamuje promień światła.
+
+\end{itemize}
+
+
 
 \end{document}
