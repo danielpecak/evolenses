@@ -19,6 +19,12 @@ module functions
     end type
 
 contains
+  subroutine printRay(r)
+    type(ray), intent(in) :: r
+    print *, "Z coordinate:", r%z
+    print *, "X coordinate:", r%x
+    print *, "Angle value:", r%phi
+  end subroutine
 
   subroutine secondMoment(vecX,result)
     real(dp), intent(in) :: vecX(:)
