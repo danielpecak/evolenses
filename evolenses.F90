@@ -5,8 +5,13 @@ program evolenses
     integer, parameter :: dp = selected_real_kind(REALPRECISION)
 
     type optsurface
-      real(dp) :: xmid, rad, diam
-      real(dp) :: xcurv, xrim
+        !!!                   PARAMETRY ZADANE
+        real(dp) :: xmid      ! polozenie punktu przeciecia powierzchni z osia optyczna
+        real(dp) :: rad       ! promien krzywizny (R>0 -> ksztalt C, R<0 -> ksztalt D)
+        real(dp) :: diam      ! srednica tuby
+        !!!                   PARAMETRY WYZNACZANE
+        real(dp) :: xcurv     ! polozenie srodka sfery definiujacej krzywizne
+        real(dp) :: xrim      ! polozenie
     end type
 
 
