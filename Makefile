@@ -40,6 +40,11 @@ bin/%: %.F90 functions.o random.o interpol.o
 	mkdir -p bin
 	$(LINK.F) $^ -o $@
 
+tests: testRay
+
+testRay: tests/test_ray.F90 functions.o
+	gfortran -o bin/test_ray tests/test_ray.F90 functions.o
+
 %.o: %.F90
 	$(COMPILE.F) -c $< -o $@
 

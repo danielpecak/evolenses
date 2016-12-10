@@ -1,7 +1,6 @@
-program evolenses
+program test_secondMoment
 
   use functions
-  use constants
 
   integer, parameter :: dp = selected_real_kind(REALPRECISION)
 
