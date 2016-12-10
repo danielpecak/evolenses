@@ -28,20 +28,19 @@ contains
     result = sum(vecX(:)**2)-mu**2
   end subroutine secondMoment
 
-  subroutine propagate(vec,dist)
+  subroutine propagate(r,dist)
+    type(ray), intent(inout) :: r
     real(dp), intent(in)    :: dist     !odległość na jaką propaguje się promień
-    real(dp), intent(inout) :: vec(1:2) !vec(1) - odległość od osi optycznej, vec(2) kąt z osią optyczną
-    vec(1) = vec(1) + vec(2)*dist !zmiana ogległości od osi optycznej
-    ! kąt się nie zmienia podczas propagacji
+    r%z = r%z + r%phi*dist     !zmiana ogległości od osi optycznej, reszta bez zmian
   end subroutine
 
-  subroutine refraction_kurwa(vec,s0,s)
-    real(dp), intent(inout) :: vec(1:2) !vec(1) - odległość od osi optycznej, vec(2) kąt z osią optyczną
+  subroutine refraction_kurwa(r,s0,s)
+    type(ray), intent(inout) :: r
     type(optsurface), intent(in) :: s0
     type(optsurface), intent(in) :: s
     !załamanie w punkcie styku, czyli odległośc od osi optycznej bez zmian
-    vec(2) = vec(1) * (s0%ncoeff - s%ncoeff) / (s%rad*s%ncoeff) &
-        & + vec(2)*s0%ncoeff / s%ncoeff
+    r%phi = r%z * (s0%ncoeff - s%ncoeff) / (s%rad*s%ncoeff) &
+        & + r%phi*s0%ncoeff / s%ncoeff
   end subroutine
 
     subroutine optsurf_geom(s)
