@@ -12,6 +12,12 @@ module functions
         real(dp) :: xrim      ! polozenie
     end type
 
+    type ray
+        real(dp) :: x       ! wspolrzedna wzdluz osi
+        real(dp) :: z       ! odleglosc od osi
+        real(dp) :: phi     ! kat
+    end type
+
 contains
 
   subroutine secondMoment(vecX,result)
