@@ -36,7 +36,7 @@ install: installdirs all
 
 random.o: interpol.o
 
-bin/%: %.F90 constants.o functions.o optsolv.o random.o interpol.o
+bin/%: %.F90 functions.o random.o interpol.o
 	mkdir -p bin
 	$(LINK.F) $^ -o $@
 
