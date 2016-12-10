@@ -35,4 +35,10 @@ contains
         endif
     end subroutine
 
+    subroutine propagate(vec,dist)
+      real(dp), intent(in)    :: dist
+      real(dp), intent(inout) :: vec(1:2)
+      vec(1) = vec(1) + vec(2)*dist
+    end subroutine
+
 end program
