@@ -53,9 +53,7 @@ clean:
 	rm -rfv *.o *.mod *.a *.so *.pc
 	rm -rfv bin testbin
 
-distclean: clean
-
-dist: distclean
+dist: clean
 	tar cvf evolenses-$(VERSION).tar -C .. \
 			--exclude='evolenses/.git' \
 			--exclude='evolenses/*.tar' \
