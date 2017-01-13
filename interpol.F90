@@ -23,8 +23,7 @@
 
 module slf_interpol
 
-    use iso_fortran_env
-    integer, parameter, private :: dp = real64
+    use kind, only: dp
 
 contains
 

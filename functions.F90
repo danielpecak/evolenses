@@ -1,7 +1,6 @@
 module functions
 
-    use iso_fortran_env
-    integer, parameter, private :: dp = real64
+    use kind, only: dp
 
     type optsurface
         real(dp) :: zaxis      ! polozenie punktu przeciecia powierzchni z osia optyczna

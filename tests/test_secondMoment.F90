@@ -1,8 +1,7 @@
 program test_secondMoment
 
   use functions
-
-  integer, parameter :: dp = selected_real_kind(REALPRECISION)
+  use kind, only: dp
 
   real(dp) :: vecX(1:10)
   real(dp) :: result

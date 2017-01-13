@@ -24,8 +24,7 @@
 module slf_random
 
     use slf_interpol
-
-    integer, parameter, private :: dp = real64
+    use kind, only: dp
 
 contains
 

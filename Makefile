@@ -23,6 +23,8 @@ COMPILE.F    	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 LINK.C    	 	= $(CC) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 LINK.F    	 	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
+OBJECTS = interpol.o random.o functions.o kind.o
+
 all:  bin/evolenses
 
 installdirs:
@@ -32,14 +34,17 @@ install: installdirs all
 	install -p bin/* $(DESTDIR)$(bindir)
 
 random.o: interpol.o
+interpol.o random.o functions.o: kind.o
 
-bin/%: %.F90 functions.o random.o interpol.o
+bin/%: %.F90 $(OBJECTS)
 	mkdir -p bin
 	$(LINK.F) $^ -o $@
 
-testbin/%: tests/%.F90 functions.o
+testbin/%: tests/%.F90 $(OBJECTS)
 	mkdir -p testbin
 	$(LINK.F) $^ -o $@
+
+.INTERMEDIATE: $(OBJECTS)
 
 tests: testbin/test_ray testbin/test_secondMoment
 

@@ -1,11 +1,8 @@
 program evolenses
 
     use functions
-    use iso_fortran_env
-
-    integer, parameter :: dp = real64
-
-
+    use kind, only: dp
+    
     real(dp), parameter :: n_air = 1
     real(dp), parameter :: n_glass = 1.33
 
