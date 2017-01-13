@@ -2,9 +2,7 @@ bin/*
 testbin/*
 *.o
 *.mod
-/evolenses-*
-/x86_64
-/i686
-/.build*
+*.smod
 *.backup
 *~
+evolenses*.tar.gz

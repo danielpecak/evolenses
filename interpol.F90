@@ -23,8 +23,8 @@
 
 module slf_interpol
 
-    integer, parameter, private :: size_k = selected_int_kind(12)
-    integer, parameter, private :: dp = selected_real_kind(REALPRECISION)
+    use iso_fortran_env
+    integer, parameter, private :: dp = real64
 
 contains
 

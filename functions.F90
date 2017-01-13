@@ -1,7 +1,7 @@
 module functions
 
     use iso_fortran_env
-    integer, parameter, private :: dp = selected_real_kind(REALPRECISION)
+    integer, parameter, private :: dp = real64
 
     type optsurface
         real(dp) :: xmid      ! polozenie punktu przeciecia powierzchni z osia optyczna

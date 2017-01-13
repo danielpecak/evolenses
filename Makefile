@@ -1,38 +1,35 @@
-VERSION  	 = 161209
+VERSION  	 	= 170106
 
-prefix 	 	 = /usr/local
-exec_prefix	 = $(prefix)
-bindir		 = $(exec_prefix)/bin
-datadir	 	 = $(prefix)/share
-includedir 	 = $(prefix)/include
-libdir 	 	 = $(exec_prefix)/lib
-docdir 	 	 = $(datadir)/doc
+prefix 	 	 	= /usr/local
+exec_prefix	 	= $(prefix)
+bindir		 	= $(exec_prefix)/bin
+datadir	 	 	= $(prefix)/share
+includedir 	 	= $(prefix)/include
+libdir 	 	 	= $(exec_prefix)/lib
+fmoddir			= $(libdir)/finclude
+docdir 	 	 	= $(datadir)/doc
+licensedir 	 	= $(datadir)/licenses
 
-INCLUDE	 	 = -I.
+INCLUDE	 	 	= -I.
 
-CC  	 	 ?= cc
-FC 		 	 := $(if $(filter $(FC),f77),f95,$(FC))
+CC  	 	 	:= cc
+CFLAGS 	 	 	?= -g -Wall -O3 -march=native
+FC 		 	 	:= f95 -fimplicit-none -std=f2008
+FFLAGS	 	 	?= -g -Wall -O3 -march=native
+FPP				:= cpp -traditional -nostdinc
 
-CFLAGS 	 	 ?= -O3 -march=native -ffast-math -Wall
-FFLAGS	 	 ?= -O3 -march=native -ffast-math -fstack-arrays -std=f2008 -Wall
-
-ALL_CPPFLAGS = "-DVERSION=\"$(VERSION)\"" -DREALPRECISION=14 $(CPPFLAGS)
-COMPILE.c 	 = $(CC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(CFLAGS) -c
-COMPILE.F    = $(FC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(FFLAGS) -c
-LINK.c 	 	 = $(CC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(CFLAGS) $(LDFLAGS)
-LINK.F    	 = $(FC) $(INCLUDE) $(ALL_CPPFLAGS) -g $(FFLAGS) $(LDFLAGS)
-LINK.o       = $(LD) --build-id $(LDFLAGS)
+COMPILE.C    	= $(CC) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+COMPILE.F    	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+LINK.C    	 	= $(CC) $(INCLUDE) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+LINK.F    	 	= $(FC) $(INCLUDE) $(FFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 all:  bin/evolenses
 
 installdirs:
 	install -d $(DESTDIR)$(bindir)
-	install -d $(DESTDIR)$(docdir)/evolenses
 
 install: installdirs all
 	install -p bin/* $(DESTDIR)$(bindir)
-	#install -m644 -p LICENSE $(DESTDIR)$(docdir)/evolenses
-	#install -m644 -p README $(DESTDIR)$(docdir)/evolenses
 
 random.o: interpol.o
 
@@ -53,17 +50,16 @@ tex: $(wildcard tex/*.tex)
 	$(MAKE) -C tex
 
 clean:
-	rm -rfv *.o *.mod *.a *.so *.so *.pc
+	rm -rfv *.o *.mod *.a *.so *.pc
+	rm -rfv bin testbin
 
 distclean: clean
-	rm -rfv evolenses-*
-	rm -rfv x86_64 i686 .build*
 
 dist: distclean
 	tar cvf evolenses-$(VERSION).tar -C .. \
 			--exclude='evolenses/.git' \
 			--exclude='evolenses/*.tar' \
-			--exclude='evolenses/bin' \
+			--exclude='evolenses/*.tar.gz' \
 			--transform="s/^evolenses/evolenses-$(VERSION)/" \
 			evolenses
-	xz -f evolenses-$(VERSION).tar
+	gzip -f evolenses-$(VERSION).tar

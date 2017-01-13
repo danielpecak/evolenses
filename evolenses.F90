@@ -2,7 +2,7 @@ program evolenses
 
     use functions
 
-    integer, parameter :: dp = selected_real_kind(REALPRECISION)
+    integer, parameter :: dp = real64
 
 
     real(dp), parameter :: n_air = 1
