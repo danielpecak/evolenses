@@ -4,12 +4,12 @@ module functions
     integer, parameter, private :: dp = real64
 
     type optsurface
-        real(dp) :: xmid      ! polozenie punktu przeciecia powierzchni z osia optyczna
+        real(dp) :: zaxis      ! polozenie punktu przeciecia powierzchni z osia optyczna
         real(dp) :: rad       ! promien krzywizny (R>0 -> ksztalt C, R<0 -> ksztalt D)
         real(dp) :: diam      ! srednica tuby
         real(dp) :: ncoeff    ! wspolczynnik zalamania przed powierzchnia
-        real(dp) :: xcurv     ! polozenie srodka sfery definiujacej krzywizne
-        real(dp) :: xrim      ! polozenie
+        real(dp) :: zsphr     ! polozenie srodka sfery definiujacej krzywizne
+        real(dp) :: zrim      ! polozenie
     end type
 
     type ray
@@ -53,12 +53,12 @@ contains
         type(optsurface), intent(inout) :: S
         real(dp) :: c
         if ( abs(S%rad) < (S%diam / 2) )  error stop "Lens is no good."
-            S%xcurv = ( S%xmid + S%rad )
+            S%zsphr = ( S%zaxis + S%rad )
             c = sqrt( S%rad**2 - S%diam**2 / 4 )
         if ( S%rad > 0 ) then
-            S%xrim = S%xcurv - c
+            S%zrim = S%zsphr - c
         else
-            S%xrim = S%xcurv + c
+            S%zrim = S%zsphr + c
         endif
     end subroutine
 
